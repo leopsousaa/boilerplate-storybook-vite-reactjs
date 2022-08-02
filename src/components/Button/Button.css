@@ -1,0 +1,48 @@
+button {
+  padding: 1em;
+  border-style: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
+}
+
+button.--primary {
+  background: #fc5;
+  color: black;
+}
+
+button.--primary:hover {
+  background: #fb5;
+  color: black;
+}
+
+button.--secondary {
+  background: #fff5e6;
+  color: #fc5;
+}
+
+button.--secondary:hover {
+  background: #ffebcc;
+  color: #fb5;
+}
+
+button.--outlined {
+  background: transparent;
+  border: 3px solid #fc5;
+  color: #fc5;
+}
+
+button.--outlined:hover {
+  border: 3px solid #fb5;
+  color: #fb5;
+}
+
+button.--disabled {
+  background: #ddd;
+  color: #999;
+}
