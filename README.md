@@ -326,6 +326,10 @@ export const parameters = {
 yarn add -D @types/react @types/react-dom typescript
 ```
 
+```shell
+yarn add clsx prop-types
+```
+
 ## PASSO 3: Construindo a estrutura do storybook
 
 > Abra seu arquivo package.json e apague as seguintes linhas:
