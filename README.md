@@ -164,12 +164,18 @@ yarn add -D @types/jest @testing-library/jest-dom @testing-library/react jest je
 
 Adicione a seguinte seção ao seu package.json:
 
-```JavaScript
+```JSON
 {
   "scripts": {
     "test": "jest"
   }
 }
+```
+
+Crie a past .jest e adicione o arquivo setup-tests.js com:
+
+```JavaScript
+import '@testing-library/jest-dom';
 ```
 
 - Crie o arquivo jest.config.js na raiz do projeto com o a configuração que
@@ -223,8 +229,267 @@ dados em seu banco de dados ou navegar em seu aplicativo.
 yarn add -D @storybook/addon-actions @storybook/addon-controls @storybook/addon-essentials @storybook/addon-interactions @storybook/addon-links @storybook/builder-vite @storybook/react @storybook/testing-library
 ```
 
-Inicialize as configurações através do comando npx:
+Adicione a seguinte seção ao seu package.json:
+
+```JSON
+{
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  }
+}
+```
+
+Crie a pasta .storybook na raiz do projeto, adicione os arquivos:
+
+main.js:
+
+```JavaScript
+module.exports = {
+  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/addon-controls',
+  ],
+  framework: '@storybook/react',
+  core: {
+    builder: '@storybook/builder-vite',
+  },
+  features: {
+    storyStoreV7: true,
+  },
+};
+```
+
+preview-head.html:
+
+```html
+<script>
+  window.global = window;
+</script>
+```
+
+reset.css:
+
+```css
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0 !important;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+preview.js:
+
+```JavaScript
+import './reset.css';
+
+export const parameters = {
+  actions: { argTypesRegex: '^on[A-Z].*' },
+  backgrounds: {
+    default: 'light',
+    values: [
+      { name: 'light', value: '#fff' },
+      { name: 'dark', value: '#000' },
+    ],
+  },
+
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+};
+```
+
+### Instalando as dependências do react /storybook
 
 ```shell
-npx storybook init
+yarn add -D @types/react @types/react-dom typescript
 ```
+
+## PASSO 3: Construindo a estrutura do storybook
+
+> Abra seu arquivo package.json e apague as seguintes linhas:
+
+```Json
+{
+  ...
+  "type": "module",
+  ...
+  "scripts":{
+    ...
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    ...
+  }
+}
+```
+
+> Apague todos os arquivos da pasta src e crie uma pasta components e um arquivo
+> index.js:
+
+!['Structure folder'](./docs/assets/structure-folder.png)
+
+> Dentro da pasta components crie uma pasta com o nome do nosso primeiro
+> componente, como exemplo vamos colocar Button. Dentro da pasta Button vamos
+> criar os seguintes arquivos seguindo a estrutura de pasta abaixo:
+
+```shell
+  .
+  └── Button
+      ├── Button.css
+      ├── Button.jsx
+      ├── Button.spec.jsx
+      ├── Button.stories.jsx
+      └── index.js
+```
+
+Adicione os seguintes códigos nos arquivos:
+
+Button.css:
+
+```css
+button {
+  padding: 1em;
+  border-style: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
+}
+
+button.--primary {
+  background: #fc5;
+  color: black;
+}
+
+button.--primary:hover {
+  background: #fb5;
+  color: black;
+}
+
+button.--secondary {
+  background: #fff5e6;
+  color: #fc5;
+}
+
+button.--secondary:hover {
+  background: #ffebcc;
+  color: #fb5;
+}
+
+button.--outlined {
+  background: transparent;
+  border: 3px solid #fc5;
+  color: #fc5;
+}
+
+button.--outlined:hover {
+  border: 3px solid #fb5;
+  color: #fb5;
+}
+
+button.--disabled {
+  background: #ddd;
+  color: #999;
+}
+```
+
+Button.jsx:
+
+```JavaScript
+import React from 'react';
+import './Button.css';
+
+import P from 'prop-types';
+
+import clsx from 'clsx';
+
+export const Button = ({ children, variant = 'primary' }) => {
+  return (
+    <button
+      className={clsx('button', {
+        '--primary': variant === 'primary',
+        '--secondary': variant === 'secondary',
+        '--outlined': variant === 'outlined',
+        '--disabled': variant === 'disabled',
+      })}
+    >
+      {children}
+    </button>
+  );
+};
+
+Button.propTypes = {
+  children: P.string.isRequired,
+  variant: P.oneOf(['primary', 'secondary', 'outlined', 'disabled']),
+};
+```
+
+Button.spec.jsx
+
+```JavaScript
+import React from 'react';
+import { render } from '@testing-library/react';
+import { Button } from './Button';
+
+test('should render component button', () => {
+  const { container } = render(<Button />);
+  expect(container).toBeInTheDocument();
+});
+```
+
+index.js
+
+```JavaScript
+export * from './Button';
+```
+
+### Agora, para finalizar basta exportar nosso componente de botão
+
+No **index.js** a pasta components exporta o componente de botão:
+
+components/index.js:
+
+```JavaScript
+export * from './Button';
+```
+
+No **index.js** a pasta src exporta os components que construímos:
+
+src/index.js:
+
+```JavaScript
+export * from './components';
+```
+
+## Finalizamos nosso boilerplate de componentes
+
+> Agora basta executar o comando yarn storybook que teremos um resultado como
+> esse:
+
+!['Result boilerplate'](./docs/assets/storybook.png)

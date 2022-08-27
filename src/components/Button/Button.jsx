@@ -21,6 +21,6 @@ export const Button = ({ children, variant = 'primary' }) => {
 };
 
 Button.propTypes = {
-  children: P.node,
+  children: P.string.isRequired,
   variant: P.oneOf(['primary', 'secondary', 'outlined', 'disabled']),
 };
