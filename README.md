@@ -159,7 +159,7 @@ module.exports = {
 Jest é um Framework de Testes em JavaScript
 
 ```shell
-yarn add -D @types/jest @testing-library/jest-dom @testing-library/react jest jest-environment-jsdom
+yarn add -D @types/jest @testing-library/jest-dom @testing-library/react jest jest-environment-jsdom identity-obj-proxy
 ```
 
 Adicione a seguinte seção ao seu package.json:
