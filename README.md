@@ -1,4 +1,4 @@
-# Boilerplate Storybook com Vite
+# Boilerplate Storybook com Vite e JS
 
 ## PASSO 1: Instalar o Vite
 
